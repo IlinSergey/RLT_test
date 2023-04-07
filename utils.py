@@ -1,11 +1,10 @@
-from datetimerange import DateTimeRange
-from dateutil.relativedelta import relativedelta
+import json
 from time import strptime
 
-from db import find_value_by_month, find_value_by_day, find_value_by_hour
+from datetimerange import DateTimeRange
+from dateutil.relativedelta import relativedelta
 
-
-import json
+from db import find_value_by_day, find_value_by_hour, find_value_by_month
 
 
 def check_query(query: str):
@@ -18,7 +17,7 @@ def check_query(query: str):
         return False
 
 
-def period(query):
+def period(query: dict):
     period = None
     if query['group_type'] == 'month':
         period = relativedelta(months=1)
@@ -29,7 +28,7 @@ def period(query):
     return period
 
 
-def answer(query):
+def answer(query: str):
     check = check_query(query)
     if check:
         query = json.loads(query)

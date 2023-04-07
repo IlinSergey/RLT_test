@@ -1,7 +1,7 @@
-from pymongo import MongoClient
-
-from datetime import datetime, timedelta
 import calendar
+from datetime import datetime, timedelta
+
+from pymongo import MongoClient
 
 import config
 
@@ -35,7 +35,7 @@ def find_value_by_hour(date: str):
     date_start = datetime.strptime(date, '%Y-%m-%dT%H:%M:%S')
     date_end = date_start + timedelta(hours=1)
     value = 0
-    res = collection.find({'dt': {'$gte': date_start, '$lte': date_end}})
+    res = collection.find({'dt': {'$gte': date_start, '$lt': date_end}})
     for item in res:
         value += item['value']
     return value
