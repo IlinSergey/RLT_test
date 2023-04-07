@@ -1,0 +1,9 @@
+config.py
+.vscode/
+.idea/
+env/
+__pycache__/
+.flake8
+/dump
+db_async.py
+*.log
