@@ -13,7 +13,8 @@ def check_query(query: str):
         query = json.loads(query)
         dt_upto = strptime(query['dt_upto'], '%Y-%m-%dT%H:%M:%S')
         dt_from = strptime(query['dt_from'], '%Y-%m-%dT%H:%M:%S')
-        return dt_upto > dt_from and query['group_type'] in ('hour', 'day', 'month')
+        return dt_upto > dt_from and query['group_type'] in ('hour', 'day',
+                                                             'month')
     except Exception:
         return False
 
