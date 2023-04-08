@@ -1,5 +1,6 @@
 import json
 from time import strptime
+from datetime import datetime as dt
 
 from datetimerange import DateTimeRange
 from dateutil.relativedelta import relativedelta
@@ -28,6 +29,15 @@ def period(query: dict):
     return period
 
 
+def check_hour(date_1: str, date_2: str):
+    dt_last = dt.strptime(date_1, '%Y-%m-%dT%H:%M:%S')
+    dt_prelast = dt.strptime(date_2, '%Y-%m-%dT%H:%M:%S')
+    if dt_last.date() > dt_prelast.date():
+        return False
+    else:
+        return True
+
+
 def answer(query: str):
     check = check_query(query)
     if check:
@@ -40,13 +50,21 @@ def answer(query: str):
         for value in time_range.range(period(query)):
             time_list.append(value.strftime('%Y-%m-%dT%H:%M:%S'))
 
-        for i in time_list:
+        period_len = len(time_list) - 1
+
+        for count, item in enumerate(time_list):
             if query['group_type'] == 'month':
-                x = find_value_by_month(i)
+                x = find_value_by_month(item)
             elif query['group_type'] == 'day':
-                x = find_value_by_day(i)
+                x = find_value_by_day(item)
             else:
-                x = find_value_by_hour(i)
+                if count == period_len:
+                    if check_hour(time_list[count], time_list[count - 1]):
+                        x = find_value_by_hour(item)
+                    else:
+                        x = 0
+                elif count < period_len:
+                    x = find_value_by_hour(item)
             salary_list.append(x)
 
         response = {}
