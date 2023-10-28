@@ -5,7 +5,7 @@ from datetime import datetime as dt
 from datetimerange import DateTimeRange
 from dateutil.relativedelta import relativedelta
 
-from db import find_value_by_day, find_value_by_hour, find_value_by_month
+from db import find_value_by_day, find_value_by_hour, find_value_by_month, find_value_by_week
 
 
 def check_query(query: str):
@@ -14,7 +14,7 @@ def check_query(query: str):
         dt_upto = strptime(query['dt_upto'], '%Y-%m-%dT%H:%M:%S')
         dt_from = strptime(query['dt_from'], '%Y-%m-%dT%H:%M:%S')
         return dt_upto > dt_from and query['group_type'] in ('hour', 'day',
-                                                             'month')
+                                                             'week','month')
     except Exception:
         return False
 
@@ -23,6 +23,8 @@ def period(query: dict):
     period = None
     if query['group_type'] == 'month':
         period = relativedelta(months=1)
+    elif query['group_type'] == 'week':
+        period = relativedelta(weeks=1)
     elif query['group_type'] == 'day':
         period = relativedelta(days=1)
     else:
@@ -43,19 +45,17 @@ def answer(query: str):
     check = check_query(query)
     if check:
         query = json.loads(query)
-
         time_list = []
         salary_list = []
-
         time_range = DateTimeRange(query['dt_from'], query['dt_upto'])
         for value in time_range.range(period(query)):
             time_list.append(value.strftime('%Y-%m-%dT%H:%M:%S'))
-
         period_len = len(time_list) - 1
-
         for count, item in enumerate(time_list):
             if query['group_type'] == 'month':
                 x = find_value_by_month(item)
+            elif query['group_type'] == 'week':
+                x = find_value_by_week(item)
             elif query['group_type'] == 'day':
                 x = find_value_by_day(item)
             else:

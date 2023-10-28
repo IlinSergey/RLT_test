@@ -21,6 +21,16 @@ def find_value_by_month(date: str):
     return value
 
 
+def find_value_by_week(date: str):
+    date_start = datetime.strptime(date, '%Y-%m-%dT00:00:00')
+    date_end = date_start + timedelta(weeks=1)
+    value = 0
+    res = collection.find({'dt': {'$gte': date_start, '$lt': date_end}})
+    for item in res:
+        value += item['value']
+    return value
+
+
 def find_value_by_day(date: str):
     date_start = datetime.strptime(date, '%Y-%m-%dT00:00:00')
     date_end = date_start + timedelta(days=1)
