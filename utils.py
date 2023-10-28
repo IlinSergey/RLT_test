@@ -1,11 +1,12 @@
 import json
-from time import strptime
 from datetime import datetime as dt
+from time import strptime
 
 from datetimerange import DateTimeRange
 from dateutil.relativedelta import relativedelta
 
-from db import find_value_by_day, find_value_by_hour, find_value_by_month, find_value_by_week
+from db import (find_value_by_day, find_value_by_hour, find_value_by_month,
+                find_value_by_week)
 
 
 def check_query(query: str):
@@ -72,6 +73,7 @@ def answer(query: str):
         response['dataset'] = salary_list
         response['labels'] = time_list
         json_answer = json.dumps(response)
+        print(json_answer)
         return json_answer
     correct_answer = '{"dt_from": "2022-09-01T00:00:00", \
 "dt_upto": "2022-12-31T23:59:00", \

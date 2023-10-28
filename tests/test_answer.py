@@ -1,4 +1,11 @@
+import json
+import os
+import sys
+
 import pytest
+
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
 
 from utils import answer
 
@@ -40,7 +47,7 @@ answer_2 = {"dataset": [8177, 8407, 4868, 7706, 8353,
                        "2022-02-02T00:00:00"]}
 
 
-@pytest.mark.parametrize('query, expected_result', [(query_1, answer_1),
-                                                    (query_2, answer_2)])
+@pytest.mark.parametrize('query, expected_result', [(query_1, json.dumps(answer_1)),
+                                                    (query_2, json.dumps(answer_2))])
 def test_answer(query, expected_result):
     assert answer(query) == expected_result
